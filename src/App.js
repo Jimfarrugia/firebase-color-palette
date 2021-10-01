@@ -4,11 +4,12 @@ import db from "./firebase";
 
 function App() {
 	const [colors, setColors] = useState([]);
+	// console.log(colors);
 
 	useEffect(
 		() =>
 			onSnapshot(collection(db, "colors"), snapshot =>
-				setColors(snapshot.docs.map(doc => doc.data()))
+				setColors(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
 			),
 		[]
 	);
@@ -19,8 +20,8 @@ function App() {
 			<ul>
 				{colors &&
 					colors.length > 0 &&
-					colors.map((color, i) => (
-						<li key={i}>
+					colors.map(color => (
+						<li key={color.id}>
 							<button>edit</button>
 							&nbsp;
 							<strong style={{ color: color.value }}>
