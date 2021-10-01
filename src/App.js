@@ -1,33 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "@firebase/firestore";
 import db from "./firebase";
 
 function App() {
-	useEffect(() => {
-		onSnapshot(collection(db, "colors"), snapshot => {
-			console.log(snapshot.docs.map(doc => doc.data()));
-		});
-	});
+	const [colors, setColors] = useState([]);
+
+	useEffect(
+		() =>
+			onSnapshot(collection(db, "colors"), snapshot =>
+				setColors(snapshot.docs.map(doc => doc.data()))
+			),
+		[]
+	);
 
 	return (
 		<div className="App">
 			<button className="button">New</button>
 			<ul>
-				<li>
-					<button>edit</button>
-					&nbsp;
-					<strong style={{ color: "#f00" }}>RED</strong>
-				</li>
-				<li>
-					<button>edit</button>
-					&nbsp;
-					<strong style={{ color: "#0f0" }}>GREEN</strong>
-				</li>
-				<li>
-					<button>edit</button>
-					&nbsp;
-					<strong style={{ color: "#00f" }}>BLUE</strong>
-				</li>
+				{colors &&
+					colors.length > 0 &&
+					colors.map((color, i) => (
+						<li key={i}>
+							<button>edit</button>
+							&nbsp;
+							<strong style={{ color: color.value }}>
+								{color.name.toUpperCase()}
+							</strong>
+						</li>
+					))}
 			</ul>
 		</div>
 	);
