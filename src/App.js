@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "@firebase/firestore";
+import { collection, onSnapshot, addDoc } from "@firebase/firestore";
 import db from "./firebase";
 
 function App() {
 	const [colors, setColors] = useState([]);
-	// console.log(colors);
+
+	const handleNewColor = async () => {
+		const colorsCollection = collection(db, "colors");
+		const payload = { name: "cyan", value: "#0ff" };
+		await addDoc(colorsCollection, payload);
+	};
 
 	useEffect(
 		() =>
@@ -16,7 +21,9 @@ function App() {
 
 	return (
 		<div className="App">
-			<button className="button">New</button>
+			<button className="button" onClick={handleNewColor}>
+				New
+			</button>
 			<ul>
 				{colors &&
 					colors.length > 0 &&
